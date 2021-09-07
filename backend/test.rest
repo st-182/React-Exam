@@ -1,0 +1,25 @@
+POST http://localhost:5000/api/teams
+Content-Type: application/json
+
+  {
+    "user": "613720b950cabf0d0f1af392",
+    "team":
+    {
+      "team_name": "Liverpool F.C.",
+      "team_logo": "https://upload.wikimedia.org/wikipedia/en/thumb/0/0c/Liverpool_FC.svg/800px-Liverpool_FC.svg.png",
+      "country": "England",
+      "creation_year": "1892"
+    }
+  }
+  
+
+
+###
+PUT http://localhost:5000/api/teams/61373b3d7af0a1c1b8c567e0
+Content-Type: application/json
+
+  {
+    "user_id": "613720b950cabf0d0f1af392",
+    "voted": true,
+    "value": true
+  }
