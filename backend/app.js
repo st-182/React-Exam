@@ -43,28 +43,17 @@ app.get("/", (req, res) =>
 //todo GET: all users
 app.get("/api/users", async (req, res) => {
   const users = await User.find({});
-  // const cars = await Car.find({});
-
-  // let usersAndCars = users.reduce((total, user) => {
-  //   let userCars = cars.filter((car) => car.user_id === "" + user._id);
-
-  //   total.push({ ...user.toObject(), cars: [...userCars] });
-
-  //   return total;
-  // }, []);
-
   res.json(users);
 });
 
-//todo GET: get single user based on id
-app.get("/api/users/:id", async (req, res) => {
-  let userId = req.params.id;
+// //todo GET: get single user based on id
+// app.get("/api/users/:id", async (req, res) => {
+//   let userId = req.params.id;
 
-  let user = await User.findById(userId);
-  // let cars = await Car.find({ user_id: userId });
+//   let user = await User.findById(userId);
 
-  res.json(user); //{ ...user.toObject(), cars: [...cars] }
-});
+//   res.json(user);
+// });
 
 //todo GET: all teams
 app.get("/api/teams", async (req, res) => {
@@ -74,12 +63,27 @@ app.get("/api/teams", async (req, res) => {
   res.json(user); //{ ...user.toObject(), cars: [...cars] }
 });
 
-//todo GET: all teams
+//todo GET: all votes
 app.get("/api/votes", async (req, res) => {
   let user = await Votes.find();
-  // let cars = await Car.find({ user_id: userId });
 
-  res.json(user); //{ ...user.toObject(), cars: [...cars] }
+  res.json(user);
+});
+
+//todo GET: all teams and votes
+app.get("/api/teams_votes", async (req, res) => {
+  Team.aggregate([
+    {
+      $lookup: {
+        from: "votes", //The collection you're getting the items from
+        localField: "_id", //The local field you're using to lookup
+        foreignField: "team_id", //The field the `A` document you're using to match
+        as: "votes", //The name of the field that will be populated with the results
+      },
+    },
+  ]).then((response) => {
+    res.json(response);
+  });
 });
 
 //! POST
@@ -139,7 +143,7 @@ app.post("/api/users/login", (req, res) => {
   });
 });
 
-//todo POST: Log in existing user
+//todo POST: Add a team
 app.post("/api/teams", async (req, res) => {
   const userAndTeamUnchecked = req.body;
   const user = userAndTeamUnchecked.user;
@@ -155,6 +159,17 @@ app.post("/api/teams", async (req, res) => {
   res.json({ result_team: teamResult, result_votes: votesResult });
 });
 
+//todo POST: Change a vote
+app.post("/api/vote/:id", async (req, res) => {
+  let voteId = req.params.id;
+  const vote = req.body;
+
+  const teamResult = await Votes.findByIdAndUpdate(voteId, {
+    rating_votes: vote,
+  });
+
+  res.json(teamResult);
+});
 //! PUT:
 //todo PUT: Delete single car based on it's id (use this route for embeded DB with single collection)
 // app.put("/api/cars/delete/:id", async (req, res) => {
@@ -191,12 +206,14 @@ app.post("/api/teams", async (req, res) => {
 //   res.json({ ...user.toObject(), cars: [...cars] });
 // });
 
-//todo PUT: Add single car to user based on his id
+//todo PUT: User votes for team
 app.put("/api/teams/:id", async (req, res) => {
   const teamId = req.params.id;
   const voteInfo = req.body;
+  const votes = await Votes.find();
+  const vote = votes.filter((vote) => vote.team_id.toString() === teamId);
 
-  const votes = await Votes.findByIdAndUpdate(teamId, { who_voted: voteInfo });
+  const votes1 = await Votes.findByIdAndUpdate(teamId, { who_voted: voteInfo });
 
   res.json(votes);
 });
