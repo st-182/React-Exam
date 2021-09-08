@@ -1,6 +1,7 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import styled from "styled-components";
+import { UserContext } from "../App";
 
 const DIVStyledMain = styled.div`
   background: gray;
@@ -27,8 +28,13 @@ const IMGStyled = styled.img`
   width: 100%;
 `;
 const SingleTeam = ({ team }) => {
+  const context = useContext(UserContext);
+  const { teamsState, teamsDispatch } = context;
+
+  console.log(teamsState);
   const [score, setScore] = useState(team.votes[0].rating_votes);
   const clickHandler = (e) => {
+    teamsDispatch({ type: "RELOAD" });
     const value = e.target.textContent;
     const user = localStorage.getItem("user");
     console.log(user, team._id, team.votes[0]._id);

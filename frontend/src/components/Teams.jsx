@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import SingleTeam from "./SingleTeam";
 import styled from "styled-components";
+import { UserContext } from "../App";
 
 const StyledDiv = styled.div`
   width: 80%;
@@ -19,9 +20,14 @@ const StyledDiv = styled.div`
 const Teams = ({ teams }) => {
   return (
     <StyledDiv>
-      {teams.map((team) => (
-        <SingleTeam team={team} key={team._id} />
-      ))}
+      {teams
+        .sort(
+          (a, b) =>
+            Number(a.votes[0].rating_votes) < Number(b.votes[0].rating_votes)
+        )
+        .map((team) => (
+          <SingleTeam team={team} key={team._id} />
+        ))}
     </StyledDiv>
   );
 };

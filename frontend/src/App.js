@@ -29,16 +29,32 @@ const reducer = (state, action) => {
       return state;
   }
 };
+//Second useReducer for sorting teams on HomeScreen
+const teamsInitialState = { reloadedTimes: 0 };
+const teamsReducer = (state, action) => {
+  switch (action.type) {
+    case "RELOAD":
+      return { reloadedTimes: state.reloadedTimes + 1 };
 
+    default:
+      return state;
+  }
+};
 function App() {
   // Hooks
   // -- state
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [teamsState, teamsDispatch] = useReducer(
+    teamsReducer,
+    teamsInitialState
+  );
 
   return (
     <>
       <GlobalStyle />
-      <UserContext.Provider value={{ state, dispatch }}>
+      <UserContext.Provider
+        value={{ state, dispatch, teamsState, teamsDispatch }}
+      >
         <Router>
           <Header />
           <Switch>
