@@ -4,7 +4,9 @@ import styled from "styled-components";
 import { UserContext } from "../App";
 
 const DIVStyledMain = styled.div`
-  background: gray;
+  background: rgba(128, 128, 128, 0.5);
+  padding: 10px;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
   h3 {
     span {
       font-size: 1rem;
@@ -31,10 +33,9 @@ const SingleTeam = ({ team }) => {
   const context = useContext(UserContext);
   const { teamsState, teamsDispatch } = context;
 
-  console.log(teamsState);
-  const [score, setScore] = useState(team.votes[0].rating_votes);
+  // const [score, setScore] = useState(team.votes[0].rating_votes);
+
   const clickHandler = (e) => {
-    teamsDispatch({ type: "RELOAD" });
     const value = e.target.textContent;
     const user = localStorage.getItem("user");
     console.log(user, team._id, team.votes[0]._id);
@@ -45,7 +46,12 @@ const SingleTeam = ({ team }) => {
           value: true,
         })
         .then((response) => {
-          setScore(response.data.rating_votes);
+          teamsDispatch({
+            type: "UPDATE",
+            payload: response.data.rating_votes,
+            id: team._id,
+          });
+          // setScore(response.data.rating_votes);
           console.log(response);
         });
     } else {
@@ -55,7 +61,12 @@ const SingleTeam = ({ team }) => {
           value: false,
         })
         .then((response) => {
-          setScore(response.data.rating_votes);
+          teamsDispatch({
+            type: "UPDATE",
+            payload: response.data.rating_votes,
+            id: team._id,
+          });
+          // setScore(response.data.rating_votes);
           console.log(response);
         });
     }
@@ -71,7 +82,7 @@ const SingleTeam = ({ team }) => {
       {localStorage.getItem("user") ? (
         <DIVStyledBtnContainer>
           <button onClick={clickHandler}>-1</button>
-          <p>{score}</p>
+          <p>{team.votes[0].rating_votes}</p>
           <button onClick={clickHandler}>+1</button>
         </DIVStyledBtnContainer>
       ) : (

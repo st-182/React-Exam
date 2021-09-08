@@ -37,6 +37,7 @@ app.get("/", (req, res) =>
     users: "http://localhost:5000/api/users",
     teams: "http://localhost:5000/api/teams",
     votes: "http://localhost:5000/api/votes",
+    votes: "http://localhost:5000/api/teams_votes",
   })
 );
 
@@ -247,8 +248,10 @@ app.put("/api/votes/:id", async (req, res) => {
       if (userVoted.value) {
         //and adding current value of a new vote
         score++;
+        votesForATeam.rating_votes = score; //giving value to team's "votes" document
       } else {
         score--;
+        votesForATeam.rating_votes = score; //giving value to team's "votes" document
       }
     } else {
       //adding current value of a first vote

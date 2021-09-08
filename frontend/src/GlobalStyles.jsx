@@ -40,7 +40,8 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   position: relative;
-  min-height: calc(100vh - 35px);
+  /* min-height: calc(100vh - 35px); */
+  min-height: 100vh;
   padding-bottom: 35px;
 }
 
@@ -51,6 +52,8 @@ header {
   display: flex;
   justify-content: space-between;
   height: 30px;
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
+
 }
 header div {
   background: rgba(128, 128, 128, 0.8);
@@ -107,6 +110,10 @@ footer {
   width: 100%;
   padding: 5px 16px;
   border-radius: 50px 50px 0 0;
+  left: 50%;
+  transform: translate(-50%);
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.5);
+
 }
 
 

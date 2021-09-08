@@ -30,12 +30,21 @@ const reducer = (state, action) => {
   }
 };
 //Second useReducer for sorting teams on HomeScreen
-const teamsInitialState = { reloadedTimes: 0 };
+const teamsInitialState = { data: [] };
 const teamsReducer = (state, action) => {
   switch (action.type) {
-    case "RELOAD":
-      return { reloadedTimes: state.reloadedTimes + 1 };
+    case "FETCH":
+      return { data: action.payload };
+    case "UPDATE":
+      const updateTeam = state.data.filter((team) => {
+        console.log("team._id ", team._id);
+        console.log("action.id ", action.id);
+        return team._id === action.id;
+      });
 
+      updateTeam[0].votes[0].rating_votes = action.payload;
+
+      return { data: [...state.data] };
     default:
       return state;
   }
