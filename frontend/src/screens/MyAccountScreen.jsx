@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
+import axios from "axios";
 
 const StyledForm = styled.form`
   width: 70%;
@@ -26,7 +27,10 @@ const MyAccountScreen = () => {
   } = useForm();
 
   const submitHandler = (e) => {
-    console.log(e);
+    const user = localStorage.getItem("user");
+    axios
+      .post("http://localhost:5000/api/teams", { user: user, team: e })
+      .then((res) => console.log(res));
   };
   return (
     <main>

@@ -36,7 +36,7 @@ app.get("/", (req, res) =>
   res.json({
     users: "http://localhost:5000/api/users",
     teams: "http://localhost:5000/api/teams",
-    votes: "http://localhost:5000/api/teams/votes",
+    votes: "http://localhost:5000/api/votes",
   })
 );
 
@@ -206,15 +206,69 @@ app.post("/api/vote/:id", async (req, res) => {
 // });
 
 //todo PUT: User votes for team
-app.put("/api/teams/:id", async (req, res) => {
-  const teamId = req.params.id;
-  const voteInfo = req.body;
-  const votes = await Votes.find();
-  const vote = votes.filter((vote) => vote.team_id.toString() === teamId);
+app.put("/api/votes/:id", async (req, res) => {
+  const voteId = req.params.id; //vote ID
+  const userVoted = req.body; // object with user's changed vote or new vote
+  const votesForATeam = await Votes.findById(voteId); //finding the team's "votes" document, which describes team's scores
+  let score; // initializing a score, which i cannot calculate using schema :(
 
-  const votes1 = await Votes.findByIdAndUpdate(teamId, { who_voted: voteInfo });
+  const myVote = votesForATeam.who_voted.filter((user) => {
+    // console.log(user.user_id);
+    // console.log(userVoted.user_id);
+    return user.user_id.toString() === userVoted.user_id;
+  }); // referencing a user's vote, which he made previously
+  console.log(myVote.length);
+  if (myVote.length === 1) {
+    //checking if he actually made this vote
+    console.log(myVote[0].value);
+    console.log(userVoted.value);
+    myVote[0].value = userVoted.value; // if he did, then changing the value in his vote
+    console.log("now: ", myVote[0].value);
 
-  res.json(votes);
+    score = votesForATeam.who_voted.reduce((acc, cur) => {
+      // now taking all votes and calculating them
+      cur.value ? acc++ : acc--;
+      return acc;
+    }, 0);
+    votesForATeam.rating_votes = score; //giving value to team's "votes" document
+    console.log(votesForATeam);
+
+    await Votes.findByIdAndUpdate(voteId, { ...votesForATeam }); // passing this updated vote to votes collection
+  } else {
+    console.log("empty array");
+    //in case this is his first this user's vote
+    if (votesForATeam.who_voted.length > 0) {
+      //checking are there other votes
+      score = votesForATeam.who_voted.reduce((acc, cur) => {
+        // if yes, then calculating their value
+        cur.value ? acc++ : acc--;
+        return acc;
+      }, 0);
+      if (userVoted.value) {
+        //and adding current value of a new vote
+        score++;
+      } else {
+        score--;
+      }
+    } else {
+      //adding current value of a first vote
+      if (userVoted.value) {
+        score = 1;
+        votesForATeam.rating_votes = score; //giving value to team's "votes" document
+      } else {
+        score = -1;
+        votesForATeam.rating_votes = score; //giving value to team's "votes" document
+      }
+    }
+
+    const votes = await Votes.findByIdAndUpdate(voteId, {
+      // AND FINALLY UPLOADING RESULT
+      rating_votes: score,
+      $push: { who_voted: userVoted },
+    });
+  }
+
+  res.json(votesForATeam);
 });
 
 //! DELETE:

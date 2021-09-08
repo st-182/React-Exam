@@ -20,7 +20,7 @@ const Teams = ({ teams }) => {
   return (
     <StyledDiv>
       {teams.map((team) => (
-        <SingleTeam team={team} />
+        <SingleTeam team={team} key={team._id} />
       ))}
     </StyledDiv>
   );

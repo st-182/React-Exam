@@ -9,6 +9,7 @@ const HomeScreen = () => {
   useEffect(() => {
     axios.get("http://localhost:5000/api/teams_votes").then((res) => {
       setTeams([...res.data]);
+      console.log(res.data);
     });
   }, []);
 
