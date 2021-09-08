@@ -2,14 +2,14 @@ import React, { useReducer } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 //GLOBAL CSS
 import { GlobalStyle } from "./GlobalStyles";
-
-// Screens (pages)
+// Screens
 import HomeScreen from "./screens/HomeScreen";
 import LoginScreen from "./screens/LoginScreen";
 import ProtectedRoute from "./ProtectedRoute";
 
-// Components
+// Header and Footer components
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 // CONTEXT
 export const UserContext = React.createContext();
@@ -64,6 +64,7 @@ function App() {
           </Switch>
         </Router>
       </UserContext.Provider>
+      <Footer />
     </>
   );
 }

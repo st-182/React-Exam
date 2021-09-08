@@ -5,14 +5,10 @@ import { useHistory } from "react-router-dom";
 import MyAccountScreen from "./screens/MyAccountScreen";
 
 const ProtectedRoute = () => {
-  // Hooks
-
-  // -- redirects
+  //redirect
   const history = useHistory();
-
-  // -- side effects
   useEffect(() => {
-    // if user not exists - redirecting to login
+    // if user do not exists - redirecting to login screen
     if (!localStorage.getItem("user")) history.push("/login");
   });
 
