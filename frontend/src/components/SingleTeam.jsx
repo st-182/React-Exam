@@ -2,7 +2,7 @@ import axios from "axios";
 import React from "react";
 import styled from "styled-components";
 
-const DIV_StyledMain = styled.div`
+const DIVStyledMain = styled.div`
   background: gray;
   h3 {
     span {
@@ -11,39 +11,41 @@ const DIV_StyledMain = styled.div`
     }
   }
 `;
-const DIV_StyledImgContainer = styled.div`
+const DIVStyledImgContainer = styled.div`
   object-fit: cover;
   width: 30%;
   margin: 10px auto;
 `;
-const DIV_StyledBtnContainer = styled.div`
+const DIVStyledBtnContainer = styled.div`
   width: 80%;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
 `;
-const IMG_Styled = styled.img`
+const IMGStyled = styled.img`
   width: 100%;
 `;
 const SingleTeam = ({ team }) => {
   const clickHandler = () => {
-    axios.post(`http://localhost:5000/api/votes/${team[0].votes}`);
+    const user = localStorage.getItem("user");
+    console.log(user, team._id);
+    axios.post(`http://localhost:5000/api/votes/${team._id}`, { user: user });
   };
   return (
-    <DIV_StyledMain key={team._id}>
-      <DIV_StyledImgContainer>
-        <IMG_Styled src={team.team_logo} alt={team.team_name} />
-      </DIV_StyledImgContainer>
+    <DIVStyledMain key={team._id}>
+      <DIVStyledImgContainer>
+        <IMGStyled src={team.team_logo} alt={team.team_name} />
+      </DIVStyledImgContainer>
       <h3>
         {team.team_name} <span>{team.creation_year}</span>
       </h3>
-      <DIV_StyledBtnContainer>
-        <button>-1</button>
+      <DIVStyledBtnContainer>
+        <button onClick={clickHandler}>-1</button>
         <p>{team.votes[0].rating_votes}</p>
         <button>+1</button>
-      </DIV_StyledBtnContainer>
-    </DIV_StyledMain>
+      </DIVStyledBtnContainer>
+    </DIVStyledMain>
   );
 };
 
