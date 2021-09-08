@@ -152,7 +152,6 @@ app.post("/api/teams", async (req, res) => {
   const teamResult = await Team.insertMany(team);
   const votesResult = await Votes.insertMany({
     team_id: teamResult[0]._id,
-    rating_votes: 0,
     who_created: user,
   });
 

@@ -18,23 +18,23 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
-  voted: [
-    {
-      team_id: {
-        type: Schema.Types.ObjectId,
-        ref: "team",
-        required: true,
-      },
-      voted: {
-        type: Boolean,
-        required: true,
-      },
-      value: {
-        type: Boolean,
-        required: true,
-      },
-    },
-  ],
+  // voted: [
+  //   {
+  //     team_id: {
+  //       type: Schema.Types.ObjectId,
+  //       ref: "team",
+  //       required: true,
+  //     },
+  //     voted: {
+  //       type: Boolean,
+  //       required: true,
+  //     },
+  //     value: {
+  //       type: Boolean,
+  //       required: true,
+  //     },
+  //   },
+  // ],
 });
 
 const User = mongoose.model("users", userSchema);

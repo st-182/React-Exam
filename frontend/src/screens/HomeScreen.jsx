@@ -1,10 +1,4 @@
-import React, {
-  useContext,
-  useEffect,
-  createContext,
-  useReducer,
-  useState,
-} from "react";
+import React, { useEffect, useState } from "react";
 import { UserContext } from "../App";
 
 import axios from "axios";
@@ -14,7 +8,6 @@ const HomeScreen = () => {
   const [teams, setTeams] = useState([]);
   useEffect(() => {
     axios.get("http://localhost:5000/api/teams_votes").then((res) => {
-      console.log(res.data);
       setTeams([...res.data]);
     });
   }, []);

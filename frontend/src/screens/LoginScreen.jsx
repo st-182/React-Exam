@@ -2,6 +2,24 @@ import React, { useState, useContext, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { UserContext } from "../App";
+import styled from "styled-components";
+
+const StyledDiv = styled.div`
+  display: flex;
+  /* align-items: center; */
+  justify-content: space-between;
+  section {
+    width: 50%;
+    padding: 10px;
+    div {
+      width: 80%;
+      margin: 0 auto;
+      form {
+        gap: 20px;
+      }
+    }
+  }
+`;
 
 const LoginScreen = () => {
   // Hooks
@@ -100,13 +118,12 @@ const LoginScreen = () => {
 
   return (
     <main>
-      <div className="container">
-        <section>
-          <h1 className="headline-1">Sign up/ Log In</h1>
-        </section>
-
-        <div className="login-signup-container">
-          <section id="login" className="card-shadow">
+      <section>
+        <h1>Sign up/ Log In</h1>
+      </section>
+      <StyledDiv>
+        <section id="login">
+          <div>
             <h2>
               <span>Have account?</span> Log In!
             </h2>
@@ -150,8 +167,10 @@ const LoginScreen = () => {
             <p id="loginMessage" className="form-message form-message-danger">
               {loginErrorMessage}
             </p>
-          </section>
-          <section id="signup" className="card-shadow">
+          </div>
+        </section>
+        <section id="signup">
+          <div>
             <h2>
               <span>New user?</span> Sign Up!
             </h2>
@@ -235,9 +254,9 @@ const LoginScreen = () => {
             <p id="signUpMessage" className="form-message form-message-danger">
               {signupErrorMessage}
             </p>
-          </section>
-        </div>
-      </div>
+          </div>
+        </section>
+      </StyledDiv>
     </main>
   );
 };

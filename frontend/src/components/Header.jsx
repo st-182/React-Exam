@@ -23,25 +23,36 @@ const Header = () => {
 
   return (
     <header>
-      <div className="container">
-        <div>Favorite football teams</div>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            {state.user ? (
+      <div>Favorite football teams</div>
+      <nav>
+        <ul>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
+          {state.user ? (
+            <>
               <li>
                 <Link to="/my-account">My Account</Link>
               </li>
-            ) : (
               <li>
-                <Link to="/login">Log In/ Sign Up</Link>
+                <Link
+                  onClick={() => {
+                    localStorage.clear();
+                    window.location.reload(false);
+                  }}
+                  to="/"
+                >
+                  Logout
+                </Link>
               </li>
-            )}
-          </ul>
-        </nav>
-      </div>
+            </>
+          ) : (
+            <li>
+              <Link to="/login">Log In/ Sign Up</Link>
+            </li>
+          )}
+        </ul>
+      </nav>
     </header>
   );
 };
