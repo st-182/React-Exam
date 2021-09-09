@@ -48,20 +48,12 @@ app.get("/api/users", async (req, res) => {
 });
 
 // //todo GET: get single user based on id
-// app.get("/api/users/:id", async (req, res) => {
-//   let userId = req.params.id;
-
-//   let user = await User.findById(userId);
-
-//   res.json(user);
-// });
 
 //todo GET: all teams
 app.get("/api/teams", async (req, res) => {
   let user = await Team.find();
-  // let cars = await Car.find({ user_id: userId });
 
-  res.json(user); //{ ...user.toObject(), cars: [...cars] }
+  res.json(user);
 });
 
 //todo GET: all votes
@@ -171,40 +163,6 @@ app.post("/api/vote/:id", async (req, res) => {
   res.json(teamResult);
 });
 //! PUT:
-//todo PUT: Delete single car based on it's id (use this route for embeded DB with single collection)
-// app.put("/api/cars/delete/:id", async (req, res) => {
-//   let { userId, carId } = req.body;
-
-//   let userFromDB = await UserAndCars.findById(userId);
-
-//   let carToDeleteIndex = userFromDB.cars.findIndex(
-//     (car) => "" + car._id === "" + carId
-//   );
-
-//   // updating user data from DB  by removing car
-//   userFromDB.cars.splice(carToDeleteIndex, 1);
-
-//   UserAndCars.findByIdAndUpdate(userId, userFromDB).then((result) =>
-//     res.json(userFromDB)
-//   );
-// });
-
-//todo PUT: Add single car to user based on his id
-// app.put("/api/cars/add/:id", async (req, res) => {
-//   let userId = req.params.id;
-//   let carInfo = req.body;
-
-//   carInfo.user_id = userId;
-
-//   let newCar = new Car(carInfo);
-
-//   newCar.save();
-
-//   let user = await User.findById(userId);
-//   let cars = await Car.find({ user_id: userId });
-
-//   res.json({ ...user.toObject(), cars: [...cars] });
-// });
 
 //todo PUT: User votes for team
 app.put("/api/votes/:id", async (req, res) => {
@@ -214,17 +172,11 @@ app.put("/api/votes/:id", async (req, res) => {
   let score; // initializing a score, which i cannot calculate using schema :(
 
   const myVote = votesForATeam.who_voted.filter((user) => {
-    // console.log(user.user_id);
-    // console.log(userVoted.user_id);
     return user.user_id.toString() === userVoted.user_id;
   }); // referencing a user's vote, which he made previously
-  console.log(myVote.length);
   if (myVote.length === 1) {
     //checking if he actually made this vote
-    console.log(myVote[0].value);
-    console.log(userVoted.value);
     myVote[0].value = userVoted.value; // if he did, then changing the value in his vote
-    console.log("now: ", myVote[0].value);
 
     score = votesForATeam.who_voted.reduce((acc, cur) => {
       // now taking all votes and calculating them
@@ -232,11 +184,9 @@ app.put("/api/votes/:id", async (req, res) => {
       return acc;
     }, 0);
     votesForATeam.rating_votes = score; //giving value to team's "votes" document
-    console.log(votesForATeam);
 
     await Votes.findByIdAndUpdate(voteId, { ...votesForATeam }); // passing this updated vote to votes collection
   } else {
-    console.log("empty array");
     //in case this is his first this user's vote
     if (votesForATeam.who_voted.length > 0) {
       //checking are there other votes
@@ -273,32 +223,3 @@ app.put("/api/votes/:id", async (req, res) => {
 
   res.json(votesForATeam);
 });
-
-//! DELETE:
-//todo DELETE: Delete single car based on it's id (for listed DB with multiple collections)
-// app.delete("/api/cars/delete/:id", async (req, res) => {
-//   const carId = req.params.id;
-
-//   const deletedCar = await Car.findByIdAndDelete(carId);
-
-//   const user = await User.findById(deletedCar.user_id);
-//   const cars = await Car.find({ user_id: deletedCar.user_id });
-
-//   res.json({ ...user.toObject(), cars: [...cars] });
-// });
-
-// --------------------------------------------------------------------
-// REST API
-/*
-GET:     /api/cars              | Get all cars
-         /api/users/:id         | Get single user based on id
-
-POST:    /api/users/signup      | Register new user
-         /api/users/login       | Log in existing user
-
-PUT:     /api/cars/delete/:id   | Delete single car based on it's id (for embeded DB with one collention)
-         /api/cars/add/:id      | Add single car to user based on his id
-
-DELETE:  /api/cars/delete/:id   | Delete single car based on it's id (for listed DB with multiple collections)
-*/
-//---------------------------------------------------------------------
